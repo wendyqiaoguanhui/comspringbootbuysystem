@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.buy.system.mapper.UserRepository">
+    <!--type:对应的实体类全名
+     id：主键
+     column:对应数据库种的列名
+     property：对应实体类种的属性名
+     一对多时使用collection 标签，property 对应 实例中的属性名，ofType 对应包含实例的全名，select :对应下面select 标签的id,Colum：关联关系的列，如：
+     uer表的id，等于order表的userid ,则这里写user表的id 传过去-->
+    <resultMap id="UserResultMap" type="com.springboot.buy.system.entity.User">
+        <id column="id" property = "id"></id>
+        <result column="loginName" property="loginName"></result>
+        <result column="USERNAME" property="username"></result>
+        <result column="PASSWORD" property="password"></result>
+        <result column="SEX" property="sex"></result>
+        <result column="IDENTITYCODE" property="identifyCode"></result>
+        <result column="EMAIL" property="email"></result>
+        <result column="MOBILE" property="mobile"></result>
+        <result column="TYPE" property="type"></result>
+        <result column="FILENAME" property="fileName"></result>
+       <!-- <collection property="order" ofType="com.springboot.buy.system.entity.Order">
+            <id column="id" property="orderId"></id>
+            <result column="orderUserId" property="userId"></result>
+            <result column="userAddress" property="userAddress"></result>
+            <result column="cost" property="cost"></result>
+        </collection>-->
+        <collection property="order"  ofType="com.springboot.buy.system.entity.Order" select="getOrder" column="id"></collection>
+        <collection property="userAddresses"  ofType="com.springboot.buy.system.entity.UserAddress" select="getUserAddress" column="id"></collection>
+        <collection property="carts"   ofType="com.springboot.buy.system.entity.Cart" select="getCart" column="id"></collection>
+    </resultMap>
+
+
+   <!-- <select id="login" resultMap="UserResultMap">
+        select
+          u.id,u.loginName,u.username,u.password,u.EMAIL,u.MOBILE, u.FILENAME,o.USERID orderUserId,o.USERADDRESS userAddress,o.COST cost from  EASYBUY_USER u, easybuy_order o where u.loginname = #{param1} and u.password = #{param2} and u.id = o.USERID
+    </select>-->
+    <!--配置resultMap 后，select标签要用resultMap属性，且这个属性直等于上面配置resultMap的id  -->
+    <select id="login" resultMap="UserResultMap">
+        select
+          id,loginName,USERNAME,PASSWORD,SEX,IDENTITYCODE,EMAIL,
+          MOBILE,TYPE,FILENAME
+        from
+          EASYBUY_USER
+        where
+          loginname = #{param1}
+        and
+          password = #{param2}
+    </select>
+
+
+
+    <select id="getOrder" parameterType="int" resultType="com.springboot.buy.system.entity.Order">
+        select
+          ID,USERID,LOGINNAME,USERADDRESS,CREATETIME,COST,SERIALNUMBER
+        from
+          EASYBUY_ORDER
+        where
+          userId = #{id}
+    </select>
+    <select id="getUserAddress" parameterType="int" resultType="com.springboot.buy.system.entity.UserAddress">
+        select
+          ID,USERID,ADDRESS,CREATETIME,ISDEFAULT,REMARK
+        from
+          EASYBUY_USER_ADDRESS
+        where
+          userId = #{id}
+    </select>
+    <select id="getCart" parameterType="int" resultType="com.springboot.buy.system.entity.Cart">
+        select
+          ID,PRODUCTID,QUANTITY,COST,USERID
+        from
+          EASYBUY_CART
+          where
+            userId = #{id}
+    </select>
+</mapper>

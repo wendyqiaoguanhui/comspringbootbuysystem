@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.buy.system.mapper.NewsRepository">
+    <select id="findForMain" resultType="com.springboot.buy.system.entity.News">
+                SELECT ID,TITLE,CONTENT,CREATETIME
+
+          FROM (SELECT a.ID,a.TITLE,a.CONTENT,a.CREATETIME, ROWNUM rn
+
+                  FROM (SELECT ID,TITLE,CONTENT,CREATETIME
+
+                          FROM easybuy_news ) a)
+
+         WHERE rn BETWEEN 0 AND 5
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+spring:
+  datasource:
+      url: jdbc:oracle:thin:@localhost:1521:orcl
+      username: buysystem
+      password: buysystem
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+  thymeleaf:
+      prefix: classpath:/static/    #模版路径
+      suffix: .html                     #模版后缀
+      servlet:
+        content-type: text/html         #设置Content-type
+      encoding: UTF-8                   #编码方式
+      mode: HTML5                       #校验 HTML5 格式
+mybatis:
+  mapper-locations: classpath:/mapping/*.xml
+  type-aliases-package: com.springboot.buy.system.entity
